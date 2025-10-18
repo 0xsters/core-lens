@@ -9,8 +9,16 @@
       "files": "*.sol",
       "options": {
         "semi": true,
-        "printWidth": 100,
+        "printWidth": 120,
         "tabWidth": 4
+      }
+    },
+    {
+      "files": "*.svg",
+      "options": {
+        "bracketSameLine": true,
+        "parser": "html",
+        "printWidth": 10000
       }
     }
   ]

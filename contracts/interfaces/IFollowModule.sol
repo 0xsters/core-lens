@@ -1,84 +1,55 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.10;
+pragma solidity >=0.6.0;
 
 /**
  * @title IFollowModule
  * @author Lens Protocol
  *
- * @notice This is the standard interface for all Lens-compatible FollowModules.
+ * @notice This is the standard interface for all Lens-compatible Follow Modules.
+ * These are responsible for processing the follow actions and can be used to implement any kind of follow logic.
+ * For example:
+ *  - Token-gated follows (e.g. a user must hold a certain amount of a token to follow a profile).
+ *  - Paid follows (e.g. a user must pay a certain amount of a token to follow a profile).
+ *  - Rewarding users for following a profile.
+ *  - Etc.
  */
 interface IFollowModule {
     /**
-     * @notice Initializes a follow module for a given Lens profile. This can only be called by the hub contract.
+     * @notice Initializes a follow module for a given Lens profile.
+     * @custom:permissions LensHub.
      *
-     * @param profileId The token ID of the profile to initialize this follow module for.
-     * @param data Arbitrary data passed by the profile creator.
+     * @param profileId The Profile ID to initialize this follow module for.
+     * @param transactionExecutor The address of the transaction executor (e.g. for any funds to transferFrom).
+     * @param data Arbitrary data passed from the user to be decoded by the Follow Module during initialization.
      *
-     * @return bytes The encoded data to emit in the hub.
+     * @return bytes The encoded data to be emitted from the hub.
      */
-    function initializeFollowModule(uint256 profileId, bytes calldata data)
-        external
-        returns (bytes memory);
+    function initializeFollowModule(
+        uint256 profileId,
+        address transactionExecutor,
+        bytes calldata data
+    ) external returns (bytes memory);
 
     /**
-     * @notice Processes a given follow, this can only be called from the LensHub contract.
+     * @notice Processes a given follow.
+     * @custom:permissions LensHub.
      *
-     * @param follower The follower address.
-     * @param profileId The token ID of the profile being followed.
+     * @param followerProfileId The Profile ID of the follower's profile.
+     * @param followTokenId The Follow Token ID that is being used to follow. Zero if we are processing a new fresh
+     * follow, in this case, the follow ID assigned can be queried from the Follow NFT collection if needed.
+     * @param transactionExecutor The address of the transaction executor (e.g. for any funds to transferFrom).
+     * @param targetProfileId The token ID of the profile being followed.
      * @param data Arbitrary data passed by the follower.
+     *
+     * @return bytes Any custom ABI-encoded data. This will be a LensHub event params that can be used by
+     * indexers or UIs.
      */
     function processFollow(
-        address follower,
-        uint256 profileId,
+        uint256 followerProfileId,
+        uint256 followTokenId,
+        address transactionExecutor,
+        uint256 targetProfileId,
         bytes calldata data
-    ) external;
-
-    /**
-     * @notice This is a transfer hook that is called upon follow NFT transfer in `beforeTokenTransfer. This can
-     * only be called from the LensHub contract.
-     *
-     * NOTE: Special care needs to be taken here: It is possible that follow NFTs were issued before this module
-     * was initialized if the profile's follow module was previously different. This transfer hook should take this
-     * into consideration, especially when the module holds state associated with individual follow NFTs.
-     *
-     * @param profileId The token ID of the profile associated with the follow NFT being transferred.
-     * @param from The address sending the follow NFT.
-     * @param to The address receiving the follow NFT.
-     * @param followNFTTokenId The token ID of the follow NFT being transferred.
-     */
-    function followModuleTransferHook(
-        uint256 profileId,
-        address from,
-        address to,
-        uint256 followNFTTokenId
-    ) external;
-
-    /**
-     * @notice This is a helper function that could be used in conjunction with specific collect modules.
-     *
-     * NOTE: This function IS meant to replace a check on follower NFT ownership.
-     *
-     * NOTE: It is assumed that not all collect modules are aware of the token ID to pass. In these cases,
-     * this should receive a `followNFTTokenId` of 0, which is impossible regardless.
-     *
-     * One example of a use case for this would be a subscription-based following system:
-     *      1. The collect module:
-     *          - Decodes a follower NFT token ID from user-passed data.
-     *          - Fetches the follow module from the hub.
-     *          - Calls `isFollowing` passing the profile ID, follower & follower token ID and checks it returned true.
-     *      2. The follow module:
-     *          - Validates the subscription status for that given NFT, reverting on an invalid subscription.
-     *
-     * @param profileId The token ID of the profile to validate the follow for.
-     * @param follower The follower address to validate the follow for.
-     * @param followNFTTokenId The followNFT token ID to validate the follow for.
-     *
-     * @return true if the given address is following the given profile ID, false otherwise.
-     */
-    function isFollowing(
-        uint256 profileId,
-        address follower,
-        uint256 followNFTTokenId
-    ) external view returns (bool);
+    ) external returns (bytes memory);
 }

@@ -1,11 +1,14 @@
 // SPDX-License-Identifier: MIT
 
-pragma solidity 0.8.10;
+pragma solidity ^0.8.15;
 
-import {ILensHub} from '../interfaces/ILensHub.sol';
-import {DataTypes} from '../libraries/DataTypes.sol';
-import {Errors} from '../libraries/Errors.sol';
-import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
+import {ILensHub} from 'contracts/interfaces/ILensHub.sol';
+import {LensV2Migration} from 'contracts/misc/LensV2Migration.sol';
+import {Types} from 'contracts/libraries/constants/Types.sol';
+import {ImmutableOwnable} from 'contracts/misc/ImmutableOwnable.sol';
+
+import {ILensHandles} from 'contracts/interfaces/ILensHandles.sol';
+import {ITokenHandleRegistry} from 'contracts/interfaces/ITokenHandleRegistry.sol';
 
 /**
  * @title ProfileCreationProxy
@@ -14,30 +17,57 @@ import {Ownable} from '@openzeppelin/contracts/access/Ownable.sol';
  * @notice This is an ownable proxy contract that enforces ".lens" handle suffixes at profile creation.
  * Only the owner can create profiles.
  */
-contract ProfileCreationProxy is Ownable {
-    ILensHub immutable LENS_HUB;
+contract ProfileCreationProxy is ImmutableOwnable {
+    ILensHandles immutable LENS_HANDLES;
+    ITokenHandleRegistry immutable TOKEN_HANDLE_REGISTRY;
 
-    constructor(address owner, ILensHub hub) {
-        _transferOwnership(owner);
-        LENS_HUB = hub;
+    error ProfileAlreadyExists();
+
+    constructor(
+        address owner,
+        address hub,
+        address lensHandles,
+        address tokenHandleRegistry
+    ) ImmutableOwnable(owner, hub) {
+        LENS_HANDLES = ILensHandles(lensHandles);
+        TOKEN_HANDLE_REGISTRY = ITokenHandleRegistry(tokenHandleRegistry);
     }
 
-    function proxyCreateProfile(DataTypes.CreateProfileData memory vars) external onlyOwner {
-        uint256 handleLength = bytes(vars.handle).length;
-        if (handleLength < 5) revert Errors.HandleLengthInvalid();
+    function proxyCreateProfile(
+        Types.CreateProfileParams calldata createProfileParams
+    ) external onlyOwner returns (uint256) {
+        return ILensHub(LENS_HUB).createProfile(createProfileParams);
+    }
 
-        bytes1 firstByte = bytes(vars.handle)[0];
-        if (firstByte == '-' || firstByte == '_' || firstByte == '.')
-            revert Errors.HandleFirstCharInvalid();
-
-        for (uint256 i = 1; i < handleLength; ) {
-            if (bytes(vars.handle)[i] == '.') revert Errors.HandleContainsInvalidCharacters();
-            unchecked {
-                ++i;
-            }
+    function proxyCreateProfileWithHandle(
+        Types.CreateProfileParams memory createProfileParams,
+        string calldata handle
+    ) external onlyOwner returns (uint256, uint256) {
+        // Check if LensHubV1 already has a profile with this handle that was not migrated yet:
+        bytes32 handleHash = keccak256(bytes(string.concat(handle, '.lens')));
+        if (LensV2Migration(LENS_HUB).getProfileIdByHandleHash(handleHash) != 0) {
+            revert ProfileAlreadyExists();
         }
 
-        vars.handle = string(abi.encodePacked(vars.handle, '.lens'));
-        LENS_HUB.createProfile(vars);
+        // We mint the handle & profile to this contract first, then link it to the profile
+        // This will not allow to initialize follow modules that require funds from the msg.sender,
+        // but we assume only simple follow modules should be set during profile creation.
+        // Complex ones can be set after the profile is created.
+        address destination = createProfileParams.to;
+        createProfileParams.to = address(this);
+        uint256 profileId = ILensHub(LENS_HUB).createProfile(createProfileParams);
+        uint256 handleId = LENS_HANDLES.mintHandle(address(this), handle);
+
+        TOKEN_HANDLE_REGISTRY.link({handleId: handleId, profileId: profileId});
+
+        // Transfer the handle & profile to the destination
+        LENS_HANDLES.transferFrom(address(this), destination, handleId);
+        ILensHub(LENS_HUB).transferFrom(address(this), destination, profileId);
+
+        return (profileId, handleId);
+    }
+
+    function proxyCreateHandle(address to, string calldata handle) external onlyOwner returns (uint256) {
+        return LENS_HANDLES.mintHandle(to, handle);
     }
 }

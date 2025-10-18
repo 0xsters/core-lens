@@ -1,0 +1,307 @@
+{
+  "mainnet": {
+    "testnet": false,
+    "chainId": 137,
+    "network": "polygon",
+    "LensProfilesGuardianTimelock": 604800,
+    "LensHandlesGuardianTimelock": 86400,
+    "LensHub": "0xdb46d1dc155634fbc732f92e853b10b288ad5a1d",
+    "ModuleGlobals": "0x3Df697FF746a60CBe9ee8D47555c88CB66f03BB9",
+    "ProfileCreator": "0xe7Af8325aA443F7678B651d4f0De23663E818691",
+    "LensPeriphery": "0xeff187b4190E551FC25a7fA4dFC6cf7fDeF7194f",
+    "Modules": {
+      "v1": {
+        "collect": [
+          {
+            "name": "FreeCollectModule",
+            "addy": "0x23b9467334bEb345aAa6fd1545538F3d54436e96"
+          },
+          {
+            "name": "FeeCollectModule",
+            "addy": "0x1292E6dF9a4697DAAfDDBD61D5a7545A634af33d"
+          },
+          {
+            "name": "LimitedFeeCollectModule",
+            "addy": "0xEF13EFa565FB29Cd55ECf3De2beb6c69bD988212"
+          },
+          {
+            "name": "TimedFeeCollectModule",
+            "addy": "0xbf4E6C28d7f37C867CE62cf6ccb9efa4C7676F7F"
+          },
+          {
+            "name": "LimitedTimedFeeCollectModule",
+            "addy": "0x7B94f57652cC1e5631532904A4A038435694636b"
+          },
+          {
+            "name": "RevertCollectModule",
+            "addy": "0xa31FF85E840ED117E172BC9Ad89E55128A999205"
+          },
+          {
+            "name": "SimpleFeeCollectModule",
+            "addy": "0x54325d507ed1b3776c146700eff61a98b45aec76"
+          },
+          {
+            "name": "MultirecipientFeeCollectModule",
+            "addy": "0xfa9da21d0a18c7b7de4566481c1e8952371f880a"
+          },
+          {
+            "name": "StepwiseCollectModule",
+            "addy": "0x210c94877dcfceda8238acd382372278844a54d7"
+          },
+          {
+            "name": "ERC4626FeeCollectModule",
+            "addy": "0x394fd100b13197787023ef4cf318cde456545db7"
+          },
+          {
+            "name": "AaveFeeCollectModule",
+            "addy": "0xa94713d0688c8a483c3352635cec4e0ce88d6a29"
+          }
+        ],
+        "follow": [
+          {
+            "name": "FeeFollowModule",
+            "addy": "0x80ae0e6048d6e295Ee6520b07Eb6EC4485193FD6"
+          },
+          {
+            "name": "ProfileFollowModule",
+            "addy": "0x057ccDf5153bE1081830a6C3D507C9dfE1ac8e4E"
+          },
+          {
+            "name": "RevertFollowModule",
+            "addy": "0x6640e4Fb3fd56a6d7DfF3C351dFd9Ab7E57fb769"
+          }
+        ],
+        "reference": [
+          {
+            "name": "TokenGatedReferenceModule",
+            "addy": "0x3d7f4f71a90fe5a9d13fab2716080f2917cf88f3"
+          },
+          {
+            "name": "FollowerOnlyReferenceModule",
+            "addy": "0x17317F96f0C7a845FFe78c60B10aB15789b57Aaa"
+          },
+          {
+            "name": "DegreesOfSeparationReferenceModule",
+            "addy": "0x081a84abf515302a276d98dc551e69f3cc33a833"
+          }
+        ]
+      },
+      "v2": {
+        "follow": [
+          {
+            "name": "FeeFollowModule",
+            "addy": "0xa8f6ba162dB789039D07A4f0ce90b1aE1f46FE8E"
+          },
+          {
+            "name": "RevertFollowModule",
+            "addy": "0x4E2D0157464501C98E781491a9dbC99c2F3fD90f"
+          }
+        ],
+        "act": [
+          {
+            "name": "CollectPublicationAction",
+            "addy": "0x0D90C58cBe787CD70B5Effe94Ce58185D72143fB"
+          }
+        ],
+        "collect": [
+          {
+            "name": "SimpleFeeCollectModule",
+            "addy": "0x060f5448ae8aCF0Bc06D040400c6A89F45b488bb"
+          },
+          {
+            "name": "MultirecipientFeeCollectModule",
+            "addy": "0x50f1D8779078c790b82dE5Aa8d72A841e1CBBbE1"
+          }
+        ],
+        "reference": [
+          {
+            "name": "DegreesOfSeparationReferenceModule",
+            "addy": "0xBe69302b0E3bAc1018B2772A7B26EB2325b3F9C8"
+          },
+          {
+            "name": "FollowerOnlyReferenceModule",
+            "addy": "0x19F8980aF29207bbd7A6D0aD0858d59bd11d4647"
+          }
+        ]
+      }
+    },
+    "Treasury": "0x6b5d40412956b8546bA2210810C100219f7011B6",
+    "TreasuryFee": "0",
+    "LegacyCollectNFTImpl": "0x5886B1Db98a3f5AaFBDeE2DEC4783C6927655B7e",
+    "FollowNFTImpl": "0x288715E67B7b184fD299143280CA6c1Eb7F31e1B",
+    "LensHandlesImpl": "0xcE557F3DDfBd1B87074E4386cd98D6B8E80997ED",
+    "LensHandles": "0xe7E7EaD361f3AaCD73A61A9bD6C10cA17F38E945",
+    "TokenHandleRegistryImpl": "0x52fa68D73C83df39B9a637F82361d9b70aAb74F4",
+    "TokenHandleRegistry": "0xD4F2F33680FCCb36748FA9831851643781608844",
+    "ModuleRegistryImpl": "0xf6fDD7932219D64f267E4BfaF8d19774526d31D9",
+    "ModuleRegistry": "0x1eD5983F0c883B96f7C35528a1e22EEA67DE3Ff9",
+    "LensHubV2Impl": "0x176c2a1c54E8b028eeEC14bF0a059E354408FF47",
+    "GovernanceContract": "0xB03B8801cF9D074Ea468aAA8eBd9B5EeD67Ac5B6",
+    "GovernanceContractAdmin": "0xf94b90BbEee30996019bABD12cEcdDCcf68331DE",
+    "ProxyAdminContract": "0x573FDF61727436a38ec6C5f6408B1F50cd69e015",
+    "ProxyAdminContractAdmin": "0xB7589cBf00623b09160aD5F6CA9536C66E0C2ebc",
+    "LensV2UpgradeContract": "0xd38c614AD4c09877F3a95Fef2FBf2781b4e9736D",
+    "ProfileCreationProxy": "0xdCB72aaB62d52aBC2E6be99BEEe535C2D1361fc0",
+    "PublicActProxy": "0x358bac99d38609F3D9fB9450Dff87DF65AdD8965",
+    "CollectNFT": "0x0c2a7761E2971D906338F5da1ecF0027E4247fd7",
+    "CollectPublicationActionImpl": "0xcc3f120f3d3bf860b910b228d2114f474b382c1d",
+    "LitAccessControlImpl": "0x79dcA158B2A019EA2377f5989066a1ac0aC20e10",
+    "LitAccessControl": "0x98a6C31E43b158198da95Ef1242faCA868424187",
+    "ProfileTokenURI": "0xCCF77B802160326282F260bb6e275333fEA9E76C",
+    "HandleTokenURI": "0x33b7C0692DD8267f936936C0A0f7079144d78B92",
+    "FollowTokenURI": "0x1a4D3f97770925A14997B351C5cC3Cd47192a5B8",
+    "PermissionlessCreatorImpl": "0x80a4D78179Cf8C1B0a0621Ba5b33A55Fba469688",
+    "PermissionlessCreator": "0x0b5e6100243f793e480DE6088dE6bA70aA9f3872"
+  },
+  "testnet": {
+    "testnet": true,
+    "chainId": 80002,
+    "network": "amoy",
+    "LensProfilesGuardianTimelock": 300,
+    "LensHandlesGuardianTimelock": 300,
+    "TreasuryFee": 500,
+    "ProfileRoyaltyFee": 500,
+    "HandleRoyaltyFee": 500,
+    "AnonymousProfileId": "1",
+    "Currencies": [
+      {
+        "symbol": "WMATIC",
+        "addy": "0x360ad4f9a9A8EFe9A8DCB5f461c4Cc1047E1Dcf9"
+      },
+      {
+        "symbol": "USDC",
+        "addy": "0x41E94Eb019C0762f9Bfcf9Fb1E58725BfB0e7582"
+      },
+      {
+        "symbol": "BONSAI",
+        "addy": "0x2549f9Bbccdc5a65DDCeA45eF91dC9BdE30697c2"
+      }
+    ],
+    "Modules": {
+      "v1": {
+        "collect": [],
+        "follow": [],
+        "reference": []
+      },
+      "v2": {
+        "follow": [
+          {
+            "name": "FeeFollowModule",
+            "addy": "0x1F7A5E77493AADc59FCD835921a60A1010312D1E"
+          },
+          {
+            "name": "RevertFollowModule",
+            "addy": "0x0c4944D3d0dDf692B578100Ed260a67c7d7F7930"
+          }
+        ],
+        "act": [
+          {
+            "name": "CollectPublicationAction",
+            "addy": "0x34A437A91415C36712B0D912c171c74595Be437d"
+          }
+        ],
+        "collect": [
+          {
+            "name": "SimpleFeeCollectModule",
+            "addy": "0x185B529b421Ff60b0F2388483b757b39103cfcb1"
+          },
+          {
+            "name": "MultirecipientFeeCollectModule",
+            "addy": "0xC13ACcCe5cDb32bED1Af0B11cdb637E3966BCB45"
+          },
+          {
+            "name": "ProtocolSharedRevenueMinFeeMintModule",
+            "addy": "0x56174f7ff96C82004D3cEC42e9A99b5A44e76C77"
+          }
+        ],
+        "reference": [
+          {
+            "name": "DegreesOfSeparationReferenceModule",
+            "addy": "0x2C1F5d6f6dc5df8ce021B5DF6d0AF84c32817d0C"
+          },
+          {
+            "name": "FollowerOnlyReferenceModule",
+            "addy": "0x0D11dC88286466DE99E3DE836eaF35826d373a3c"
+          }
+        ]
+      }
+    },
+    "ModuleRegistryImpl": "0x90E0b396C83F6df96Cd1f76df3Db2dAf9eae9c93",
+    "ModuleRegistry": "0x9E81eD8099dF82004D298144138C12AbB959DF1E",
+    "FollowNFT": "0x3CA67DAfe181AAd74Ad026Cc098E248869f50Ff1",
+    "LensHubImpl": "0x68b2751C4113BbACca7c024a030355fE3989Bda7",
+    "LensHub": "0xA2574D9DdB6A325Ad2Be838Bd854228B80215148",
+    "LensHandlesImpl": "0x33b7C0692DD8267f936936C0A0f7079144d78B92",
+    "LensHandles": "0xf6fDD7932219D64f267E4BfaF8d19774526d31D9",
+    "TokenHandleRegistryImpl": "0x33E2b04f6060BbfD9f2d45EeC53787040B7DE049",
+    "TokenHandleRegistry": "0x24360dc6Af3c0b37baA8B0aaDD5BcA11C1a1389A",
+    "PermissionlessCreator": "0x36440da1D98FF46637f0b98AAA082bc77977B49B",
+    "CreditsFaucet": "0xB4Ae4bb3A458f690A0768a9681a5a157886ADC89",
+    "CollectNFT": "0xC7B6faDeCE0345E60ffa46BD3100094815aeB428",
+    "LitAccessControlImpl": "0xae17Edd1CbCE05394575192006893Af9cB1AFc05",
+    "LitAccessControl": "0x9Ddad77aD520d02D2566563b446935C6edD970fC",
+    "PublicActProxy": "0xfD8671cC32ca785Cb4fb81431CF0Acfe7d4dAa3F",
+    "GovernanceContract": "0x17e37DC312934108DaC5905897559C4c4A81b994",
+    "GovernanceContractAdmin": "0x532BbA5445e306cB83cF26Ef89842d4701330A45",
+    "ProxyAdminContract": "0xF71926E6487D465A307Bc0AcB5da50Ab7A15DA27",
+    "ProxyAdminContractAdmin": "0xFBD6b26d7d6FaF3e3AccC77Aa645AeaB6c024d23",
+    "ProfileCreationProxy": "0x8de25afc4B37e0AdBb58caf3dF06fAf419455404",
+    "Treasury": "0x648Ddb72d51B5f1849586f6Fd2a95E70754A126A"
+  },
+  "local": {
+    "testnet": true,
+    "chainId": 31337,
+    "network": "local",
+    "LensProfilesGuardianTimelock": 300,
+    "LensHandlesGuardianTimelock": 300,
+    "Currencies": [],
+    "Modules": {
+      "v1": {
+        "collect": [],
+        "follow": [],
+        "reference": []
+      },
+      "v2": {
+        "follow": [],
+        "act": [],
+        "collect": [],
+        "reference": []
+      }
+    },
+    "TreasuryFee": 500,
+    "ProfileRoyaltyFee": 500,
+    "HandleRoyaltyFee": 500
+  },
+  "example": {
+    "testnet": true,
+    "chainId": 69,
+    "network": "example",
+    "LensProfilesGuardianTimelock": 300,
+    "LensHandlesGuardianTimelock": 300,
+    "Currencies": [
+      {
+        "symbol": "EXAMPLE",
+        "addy": "0x0000000000000000000000000000000000000006"
+      },
+      {
+        "symbol": "BITCOIN",
+        "addy": "0x0000000000000000000000000000000000000009"
+      }
+    ],
+    "Modules": {
+      "v1": {
+        "collect": [],
+        "follow": [],
+        "reference": []
+      },
+      "v2": {
+        "follow": [],
+        "act": [],
+        "collect": [],
+        "reference": []
+      }
+    },
+    "TreasuryFee": "50",
+    "AnonymousProfileId": "3"
+  }
+}

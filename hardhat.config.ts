@@ -3,6 +3,8 @@ import { accounts } from './helpers/test-wallets';
 import { eEthereumNetwork, eNetwork, ePolygonNetwork, eXDaiNetwork } from './helpers/types';
 import { HARDHATEVM_CHAINID } from './helpers/hardhat-constants';
 import { NETWORKS_RPC_URL } from './helper-hardhat-config';
+import 'hardhat-preprocessor';
+import fs from 'fs';
 import dotenv from 'dotenv';
 import glob from 'glob';
 import path from 'path';
@@ -16,6 +18,15 @@ import 'hardhat-gas-reporter';
 import 'hardhat-contract-sizer';
 import 'hardhat-log-remover';
 import 'hardhat-spdx-license-identifier';
+import 'hardhat-tracer';
+
+function getRemappings() {
+  return fs
+    .readFileSync('remappings.txt', 'utf8')
+    .split('\n')
+    .filter(Boolean) // remove empty lines
+    .map((line) => line.trim().split('='));
+}
 
 if (!process.env.SKIP_LOAD) {
   glob.sync('./tasks/**/*.ts').forEach(function (file) {
@@ -23,7 +34,6 @@ if (!process.env.SKIP_LOAD) {
   });
 }
 
-const DEFAULT_BLOCK_GAS_LIMIT = 12450000;
 const MNEMONIC_PATH = "m/44'/60'/0'/0";
 const MNEMONIC = process.env.MNEMONIC || '';
 const MAINNET_FORK = process.env.MAINNET_FORK === 'true';
@@ -48,14 +58,19 @@ const mainnetFork = MAINNET_FORK
   : undefined;
 
 const config: HardhatUserConfig = {
+  tracer: {
+    enabled: false,
+  },
   solidity: {
     compilers: [
       {
-        version: '0.8.10',
+        version: '0.8.21',
         settings: {
+          evmVersion: 'paris',
+          viaIR: true,
           optimizer: {
             enabled: true,
-            runs: 200,
+            runs: 10,
             details: {
               yul: true,
             },
@@ -73,11 +88,6 @@ const config: HardhatUserConfig = {
     mumbai: getCommonNetworkConfig(ePolygonNetwork.mumbai, 80001),
     xdai: getCommonNetworkConfig(eXDaiNetwork.xdai, 100),
     hardhat: {
-      hardfork: 'london',
-      blockGasLimit: DEFAULT_BLOCK_GAS_LIMIT,
-      gas: DEFAULT_BLOCK_GAS_LIMIT,
-      gasPrice: 8000000000,
-      chainId: HARDHATEVM_CHAINID,
       throwOnTransactionFailures: true,
       throwOnCallFailures: true,
       accounts: accounts.map(({ secretKey, balance }: { secretKey: string; balance: string }) => ({
@@ -85,6 +95,7 @@ const config: HardhatUserConfig = {
         balance,
       })),
       forking: mainnetFork,
+      allowUnlimitedContractSize: true,
     },
   },
   gasReporter: {
@@ -96,6 +107,25 @@ const config: HardhatUserConfig = {
   },
   etherscan: {
     apiKey: BLOCK_EXPLORER_KEY,
+  },
+  preprocess: {
+    eachLine: (hre) => ({
+      transform: (line: string) => {
+        if (line.match(/^\s*import /i)) {
+          for (const [from, to] of getRemappings()) {
+            if (line.includes(from)) {
+              line = line.replace(from, to);
+              break;
+            }
+          }
+        }
+        return line;
+      },
+    }),
+  },
+  paths: {
+    sources: './contracts',
+    cache: './cache_hardhat',
   },
 };
 
